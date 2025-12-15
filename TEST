@@ -1,0 +1,170 @@
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amazon in Lower Price</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <!-- Header -->
+  <header class="flex justify-between items-center p-6 bg-white shadow-md sticky top-0 z-50">
+    <h1 class="text-2xl font-bold">Amazon in Lower Price</h1>
+    <div class="flex items-center gap-6">
+      <select id="lang" class="border rounded px-2 py-1">
+        <option>FR</option>
+        <option>EN</option>
+      </select>
+      <button id="cartBtn" class="relative">
+        <i data-feather="shopping-cart"></i>
+        <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Histoire -->
+  <section class="text-center py-12 px-6">
+    <h2 class="text-3xl font-bold mb-4">Notre histoire</h2>
+    <p class="max-w-3xl mx-auto text-lg text-gray-600">
+      Amazon in Lower Price est une nouvelle boutique qui veut rendre accessibles les produits tendance du moment à moitié prix. 
+      Pour notre lancement, tous les articles sont proposés avec une réduction spéciale de 50% !
+    </p>
+  </section>
+
+  <!-- Produits -->
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8" id="products"></section>
+
+  <!-- Avis -->
+  <section class="bg-white py-12 px-6">
+    <h2 class="text-2xl font-bold text-center mb-6">Avis de nos clients</h2>
+    <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      <div class="bg-gray-100 p-4 rounded-lg shadow">
+        <p class="mb-2">⭐️⭐️⭐️⭐️⭐️</p>
+        <p>"Super boutique ! Les prix sont incroyables, j’ai commandé une Moon Lamp et je suis ravi."</p>
+        <span class="block mt-2 font-semibold">– Julie, Paris</span>
+      </div>
+      <div class="bg-gray-100 p-4 rounded-lg shadow">
+        <p class="mb-2">⭐️⭐️⭐️⭐️⭐️</p>
+        <p>"Service rapide, produits tendance et vraiment pas chers. Je recommande !"</p>
+        <span class="block mt-2 font-semibold">– Karim, Lyon</span>
+      </div>
+      <div class="bg-gray-100 p-4 rounded-lg shadow">
+        <p class="mb-2">⭐️⭐️⭐️⭐️⭐️</p>
+        <p>"J’adore mon humidificateur nuage, il est magnifique et apaisant."</p>
+        <span class="block mt-2 font-semibold">– Emma, Bruxelles</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-6 text-center">
+    <p>&copy; 2025 Amazon in Lower Price – Tous droits réservés</p>
+  </footer>
+
+  <!-- Modal Panier -->
+  <div id="cartModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg w-96 max-h-[90vh] overflow-y-auto">
+      <h3 class="text-xl font-bold mb-4">Votre Panier</h3>
+      <ul id="cartItems" class="mb-4 space-y-2"></ul>
+      <p class="font-bold mb-4">Total: <span id="cartTotal">0 €</span></p>
+      <div class="space-y-3 mb-4">
+        <input type="text" placeholder="Adresse de livraison" class="w-full border p-2 rounded">
+        <input type="email" placeholder="Email pour le suivi" class="w-full border p-2 rounded">
+      </div>
+      <button onclick="openPayment()" class="bg-green-500 text-white px-4 py-2 rounded">Commander</button>
+      <button onclick="closeCart()" class="ml-2 px-4 py-2 border rounded">Fermer</button>
+    </div>
+  </div>
+
+  <!-- Modal Paiement -->
+  <div id="paymentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg w-96">
+      <h3 class="text-xl font-bold mb-4">Paiement</h3>
+      <form class="space-y-4">
+        <input type="text" placeholder="Nom complet" class="w-full border p-2 rounded">
+        <input type="text" placeholder="Numéro de carte (factice)" class="w-full border p-2 rounded">
+        <div class="flex gap-2">
+          <input type="text" placeholder="MM/AA" class="w-1/2 border p-2 rounded">
+          <input type="text" placeholder="CVV" class="w-1/2 border p-2 rounded">
+        </div>
+        <button type="button" onclick="alert('Paiement démo effectué !')" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Payer</button>
+      </form>
+      <button onclick="closePayment()" class="mt-4 px-4 py-2 border rounded w-full">Annuler</button>
+    </div>
+  </div>
+
+  <script>
+    // Produits avec prix réduits de moitié et notes
+    const products = [
+      {name: "Moon Lamp", price: 15, old: 30, rating: 5, reviews: 120, img: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600"},
+      {name: "Color-Changing Swimsuit", price: 25, old: 50, rating: 4, reviews: 230, img: "https://images.unsplash.com/photo-1590764352308-9c0a95e3f6b3?auto=format&fit=crop&w=600"},
+      {name: "Ice Roller", price: 10, old: 20, rating: 4, reviews: 150, img: "https://images.unsplash.com/photo-1616394584738-5ad7881e5341?auto=format&fit=crop&w=600"},
+      {name: "Rain Cloud Humidifier", price: 20, old: 40, rating: 5, reviews: 270, img: "https://images.unsplash.com/photo-1606813907291-78fc8c56b3e5?auto=format&fit=crop&w=600"},
+      {name: "2-in-1 Fan + Humidifier", price: 25, old: 50, rating: 4, reviews: 180, img: "https://images.unsplash.com/photo-1594381898411-846e7d193883?auto=format&fit=crop&w=600"},
+      {name: "Retro Flip Clock", price: 30, old: 60, rating: 3, reviews: 95, img: "https://images.unsplash.com/photo-1606813907287-9fc4e66d66e2?auto=format&fit=crop&w=600"},
+      {name: "Portable Coffee Maker", price: 40, old: 80, rating: 5, reviews: 210, img: "https://images.unsplash.com/photo-1618213837799-7f6576682189?auto=format&fit=crop&w=600"},
+      {name: "Automatic Cat Toy", price: 13, old: 26, rating: 4, reviews: 160, img: "https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=600"},
+      {name: "Phone Polarizing Lens", price: 10, old: 20, rating: 4, reviews: 38, img: "https://images.unsplash.com/photo-1508898578281-774ac4893c0c?auto=format&fit=crop&w=600"},
+      {name: "Portable Smoothie Blender", price: 20, old: 40, rating: 5, reviews: 200, img: "https://images.unsplash.com/photo-1622202173121-cbc3bb872e90?auto=format&fit=crop&w=600"},
+    ];
+
+    const productGrid = document.getElementById("products");
+    products.forEach((p, i) => {
+      const stars = "⭐️".repeat(p.rating) + "☆".repeat(5 - p.rating);
+      const div = document.createElement("div");
+      div.className = "bg-white p-4 rounded-lg shadow hover:shadow-lg transition";
+      div.innerHTML = `
+        <img src="${p.img}" alt="${p.name}" class="rounded mb-4 h-48 w-full object-cover">
+        <h4 class="text-lg font-bold mb-2">${p.name}</h4>
+        <p class="mb-1"><span class="line-through text-gray-500 mr-2">${p.old} €</span><span class="text-red-600 font-bold">${p.price} €</span></p>
+        <p class="text-sm text-yellow-500 mb-2">${stars} <span class="text-gray-600 text-xs">(${p.reviews} avis)</span></p>
+        <button onclick="addToCart(${i})" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded w-full">Ajouter au panier</button>
+      `;
+      productGrid.appendChild(div);
+    });
+
+    let cart = [];
+
+    function addToCart(i){
+      cart.push(products[i]);
+      updateCart();
+    }
+
+    function updateCart(){
+      document.getElementById("cartCount").innerText = cart.length;
+      const items = document.getElementById("cartItems");
+      items.innerHTML = "";
+      let total = 0;
+      cart.forEach((p, idx) => {
+        total += p.price;
+        items.innerHTML += `<li class='flex justify-between'>${p.name} - ${p.price}€ <button onclick='removeFromCart(${idx})' class='text-red-500'>X</button></li>`;
+      });
+      document.getElementById("cartTotal").innerText = total + " €";
+    }
+
+    function removeFromCart(i){
+      cart.splice(i,1);
+      updateCart();
+    }
+
+    document.getElementById("cartBtn").onclick = ()=>{
+      document.getElementById("cartModal").classList.remove("hidden");
+    }
+
+    function closeCart(){
+      document.getElementById("cartModal").classList.add("hidden");
+    }
+
+    function openPayment(){
+      document.getElementById("cartModal").classList.add("hidden");
+      document.getElementById("paymentModal").classList.remove("hidden");
+    }
+
+    function closePayment(){
+      document.getElementById("paymentModal").classList.add("hidden");
+    }
+
+    feather.replace();
+  </script>
+</body>
+</html>
